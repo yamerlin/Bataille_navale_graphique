@@ -95,7 +95,6 @@ public class Grille_de_jeu extends Parent {
                 for(int i = 0; i < t; i++){
                     if(grille[l][c+i] != 0){
                         isPosOk = false;
-                        System.out.println("Collision");
                     }
                 }
             }
@@ -116,7 +115,7 @@ public class Grille_de_jeu extends Parent {
                 }
             }
         }
-        AfficherGrille(grilleJeu);
+
         return isPosOk;
     }
 
