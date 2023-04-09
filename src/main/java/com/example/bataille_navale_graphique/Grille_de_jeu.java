@@ -1,5 +1,6 @@
 package com.example.bataille_navale_graphique;
 
+import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Cell;
@@ -320,6 +321,11 @@ public class Grille_de_jeu extends Parent {
                     isVainqueur = false;
                 }
             }
+        }
+
+        if(isVainqueur == true){
+            //Fenetre_de_jeu.mainWindow.hide();
+            new Fenetre_de_fin_de_partie();
         }
 
         return isVainqueur;
