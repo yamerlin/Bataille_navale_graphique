@@ -65,13 +65,28 @@ public class Grille_de_jeu extends Parent {
 
         //PLACER LES BATEAUX DU JOUEUR
 
-        if(posOk(grilleJeu,l,c, bateau.sensDuBateau, bateau.tailleBateau) == true){
-            for(int i = c; i<c+ bateau.tailleBateau; i++){
-                Cell cell = getCell(i, l);
-                cell.setFill(Color.BLACK);
-                grilleJeu[l][i] = bateau.numeroDuBateau;
+        //Si il est horizontale
+        if(bateau.sensDuBateau == 1) {
+            if (posOk(grilleJeu, l, c, bateau.sensDuBateau, bateau.tailleBateau) == true) {
+                for (int i = c; i < c + bateau.tailleBateau; i++) {
+                    Cell cell = getCell(i, l);
+                    cell.setFill(Color.BLACK);
+                    grilleJeu[l][i] = bateau.numeroDuBateau;
+                }
+                isBateauPlacer = true;
             }
-            isBateauPlacer = true;
+        }
+
+        //Si il est verticale
+        if(bateau.sensDuBateau == 2) {
+            if (posOk(grilleJeu, l, c, bateau.sensDuBateau, bateau.tailleBateau) == true) {
+                for (int i = l; i < l + bateau.tailleBateau; i++) {
+                    Cell cell = getCell(c, i);
+                    cell.setFill(Color.BLACK);
+                    grilleJeu[i][c] = bateau.numeroDuBateau;
+                }
+                isBateauPlacer = true;
+            }
         }
 
         return isBateauPlacer;
