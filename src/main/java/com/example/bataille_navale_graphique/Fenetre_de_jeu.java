@@ -70,7 +70,7 @@ public class Fenetre_de_jeu extends Parent {
         grilleDeJeuJoueur = new Grille_de_jeu(false, event -> {
 
             //Si le jeu a deja commencé, on fait un return pour empécher de placer d'autres bateaux
-            if(grilleDeJeuJoueur.debutDuJeu == true){
+            if(grilleDeJeuOrdi.debutDuJeu == true){
                 return;
             }
 
