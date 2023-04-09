@@ -117,7 +117,8 @@ public class Fenetre_de_jeu extends Parent {
                 cell = grilleDeJeuOrdi.getCell(cell.x, cell.y);
                 System.out.println("X : " + cell.x + "    Y : " + cell.y);
 
-                grilleDeJeuOrdi.tir(cell.y, cell.x);
+                grilleDeJeuOrdi.tirJoueur(cell.y, cell.x);
+                grilleDeJeuJoueur.tirOrdi();
             }
         });
 

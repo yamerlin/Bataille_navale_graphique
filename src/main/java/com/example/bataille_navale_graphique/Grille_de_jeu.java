@@ -263,12 +263,46 @@ public class Grille_de_jeu extends Parent {
         }
     }
 
-    public void tir(int l, int c){
+    public void tirJoueur(int l, int c){
         if (grilleOrdi[l][c] != 0 && grilleOrdi[l][c] != 6) {
-            System.out.println("Touché !");
+            System.out.println("Tu as touché l'ennemi !");
             Cell cell = getCell(c, l);
             cell.setFill(Color.RED);
             grilleOrdi[l][c] = 6;
+        }
+        else{
+            if(grilleOrdi[l][c] == 0) {
+                System.out.println("Tu as tiré dans l'eau !");
+
+                Cell cell = getCell(c, l);
+                cell.setFill(Color.BLUE);
+            }
+        }
+    }
+
+    public void tirOrdi(){
+        int l;
+        int c;
+
+        do {
+            l = randRange(0, 10);
+            c = randRange(0, 10);
+        }
+        while(grilleJeu[l][c]==6 || grilleJeu[l][c]==7);//Re tirer tant que la case a déjà été tiré
+
+        if (grilleJeu[l][c] != 0 && grilleJeu[l][c] != 6 && grilleJeu[l][c] !=7) {
+            System.out.println("L'ennemi t'as touché !");
+            Cell cell = getCell(c, l);
+            cell.setFill(Color.RED);
+            grilleJeu[l][c] = 6;
+        }
+        else{
+            if(grilleJeu[l][c] == 0) {
+                System.out.println("L'ennemi a tiré dans l'eau !");
+                Cell cell = getCell(c, l);
+                cell.setFill(Color.BLUE);
+                grilleJeu[l][c] = 7;
+            }
         }
     }
 }
