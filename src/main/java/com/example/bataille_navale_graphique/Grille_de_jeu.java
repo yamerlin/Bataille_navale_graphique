@@ -19,6 +19,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 
 public class Grille_de_jeu extends Parent {
     boolean debutDuJeu = false;
@@ -43,6 +44,7 @@ public class Grille_de_jeu extends Parent {
     }
 
     private VBox rows = new VBox();
+
     public Grille_de_jeu(boolean ordinateur, EventHandler<? super MouseEvent> handler){
 
         for(int y = 0; y < 10; y++) {
@@ -52,7 +54,6 @@ public class Grille_de_jeu extends Parent {
                 c.setOnMouseClicked(handler);
                 row.getChildren().add(c);
             }
-
             rows.getChildren().add(row);
         }
         getChildren().add(rows);
@@ -259,6 +260,15 @@ public class Grille_de_jeu extends Parent {
                  */
                 System.out.print(grille[i][j]);
             }
+        }
+    }
+
+    public void tir(int l, int c){
+        if (grilleOrdi[l][c] != 0 && grilleOrdi[l][c] != 6) {
+            System.out.println("Touché !");
+            Cell cell = getCell(c, l);
+            cell.setFill(Color.RED);
+            grilleOrdi[l][c] = 6;
         }
     }
 }

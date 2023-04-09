@@ -67,6 +67,8 @@ public class Fenetre_de_jeu extends Parent {
         BorderPane root = new BorderPane();
         root.setPrefSize(1200,800);
 
+
+
         grilleDeJeuJoueur = new Grille_de_jeu(false, event -> {
 
             //Si le jeu a deja commencé, on fait un return pour empécher de placer d'autres bateaux
@@ -87,18 +89,36 @@ public class Fenetre_de_jeu extends Parent {
 
                 //cell.setFill(Color.BLACK);
 
+                //Créer le bateau, transmettre sa position a initGrilleJeu, puis tester s'il a pu être placé
                 if (grilleDeJeuJoueur.initGrilleJeu(new Bateaux(tailleBateaux[numeroDuBateau], sensDuBateau, numeroDuBateau), cell.y, cell.x)) {
+
+
+                    //Si le bateau a pu être placé, incrementer le compteur de bateaux placés
                     numeroDuBateau++;
+
+                    //Si tous les bateaux du joueur ont été placés, placer les bateaux de l'ordinateur
                     if (numeroDuBateau == 6) {
                         grilleDeJeuOrdi.initGrilleOrdi();
                     }
+
                 }
             }
 
         });
 
         grilleDeJeuOrdi = new Grille_de_jeu(true, event -> {
-            Cell cell = (Cell) event.getSource();
+            //Si le jeu n'a pas encore commencé (tous les bateaux ne sont pas placés) alors on ne peut rien faire sur la grille de l'ordinateur (return)
+            if(grilleDeJeuOrdi.debutDuJeu != true){
+                return;
+            }
+            //Si le jeu est commencé on peut cliquer sur la grille de l'ordinateur pour découvrir les bateaux
+            else{
+                Cell cell = (Cell) event.getSource();
+                cell = grilleDeJeuOrdi.getCell(cell.x, cell.y);
+                System.out.println("X : " + cell.x + "    Y : " + cell.y);
+
+                grilleDeJeuOrdi.tir(cell.y, cell.x);
+            }
         });
 
         HBox hbox = new HBox(50, grilleDeJeuJoueur, grilleDeJeuOrdi);
