@@ -68,22 +68,33 @@ public class Fenetre_de_jeu extends Parent {
         root.setPrefSize(1200,800);
 
         grilleDeJeuJoueur = new Grille_de_jeu(false, event -> {
-            //Récupérer la cellule ou l'utilisateur clique (seulement sur la grille de jeu du joueur)
-            Cell cell = (Cell) event.getSource();
 
-            //Printer les coordonnées de cette cellule
-            System.out.println("X : " + cell.x + "    Y : " +cell.y);
+            //Si le jeu a deja commencé, on fait un return pour empécher de placer d'autres bateaux
+            if(grilleDeJeuJoueur.debutDuJeu == true){
+                return;
+            }
 
-            cell = grilleDeJeuJoueur.getCell(cell.x, cell.y);
+            //Sinon, on place les bateaux
+            else {
 
-            //cell.setFill(Color.BLACK);
+                //Récupérer la cellule ou l'utilisateur clique (seulement sur la grille de jeu du joueur)
+                Cell cell = (Cell) event.getSource();
 
-            if(grilleDeJeuJoueur.initGrilleJeu(new Bateaux(tailleBateaux[numeroDuBateau], sensDuBateau, numeroDuBateau), cell.y, cell.x)){
-                numeroDuBateau++;
-                if(numeroDuBateau == 6){
-                    grilleDeJeuOrdi.initGrilleOrdi();
+                //Printer les coordonnées de cette cellule
+                System.out.println("X : " + cell.x + "    Y : " + cell.y);
+
+                cell = grilleDeJeuJoueur.getCell(cell.x, cell.y);
+
+                //cell.setFill(Color.BLACK);
+
+                if (grilleDeJeuJoueur.initGrilleJeu(new Bateaux(tailleBateaux[numeroDuBateau], sensDuBateau, numeroDuBateau), cell.y, cell.x)) {
+                    numeroDuBateau++;
+                    if (numeroDuBateau == 6) {
+                        grilleDeJeuOrdi.initGrilleOrdi();
+                    }
                 }
             }
+
         });
 
         grilleDeJeuOrdi = new Grille_de_jeu(true, event -> {
