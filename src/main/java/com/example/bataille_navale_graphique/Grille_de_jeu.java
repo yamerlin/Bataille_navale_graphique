@@ -3,6 +3,8 @@ package com.example.bataille_navale_graphique;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Cell;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import java.util.ArrayList;
