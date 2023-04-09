@@ -81,7 +81,7 @@ public class Fenetre_de_jeu extends Parent {
             if(grilleDeJeuJoueur.initGrilleJeu(new Bateaux(tailleBateaux[numeroDuBateau], sensDuBateau, numeroDuBateau), cell.y, cell.x)){
                 numeroDuBateau++;
                 if(numeroDuBateau == 6){
-                    numeroDuBateau = 1;
+                    grilleDeJeuOrdi.initGrilleOrdi();
                 }
             }
         });

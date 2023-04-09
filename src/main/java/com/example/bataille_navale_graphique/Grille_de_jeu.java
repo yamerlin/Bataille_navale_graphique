@@ -9,6 +9,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
@@ -19,10 +21,26 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class Grille_de_jeu extends Parent {
+    boolean debutDuJeu = false;
 
     public static int [][] grilleOrdi = new int[10][10];
 
     public static int [][] grilleJeu = new int[10][10];
+
+    /*
+     * Objet utilisé pour la génération de nombres aléatoires
+     */
+    public static Random rand = new Random();
+
+    /**
+     * Fonction qui retourne un entier aléatoire compris entre a (inclus) et b (exclus).
+     * @param a Entier borne inférieur
+     * @param b Entier borne supérieur
+     * @return Un nombre aléatoire compris entre a (inclus) et b (exclus).
+     */
+    public static int randRange(int a, int b){
+        return rand.nextInt(b-a)+a;
+    }
 
     private VBox rows = new VBox();
     public Grille_de_jeu(boolean ordinateur, EventHandler<? super MouseEvent> handler){
@@ -92,6 +110,41 @@ public class Grille_de_jeu extends Parent {
         return isBateauPlacer;
     }
 
+    public void initGrilleOrdi() {
+        /*
+         * Tableau contenant les tailles de chaque bateau, il commence à la position 1 au lieu de commencer à la position 0 pour correspondre au numéro du bateau (1,2,3,4 ou 5)
+         */
+        int[] tailleBateaux = new int[]{0,5,4,3,3,2};
+
+        /*
+         * On commence par assigner des valeurs aléatoires aux variables ligne, colonne et sens du bateau.
+         */
+        int l = randRange(0, 10);
+        int c = randRange(0, 10);
+        int d = randRange(1, 3);
+
+        /*
+         * On répète ensuite l'opération pour chacun des 5 bateaux, tant que leur position n'est pas validée par la fonction posOk
+         */
+        for (int i = 1; i < 6; i++) {
+            while (posOk(grilleOrdi, l, c, d, tailleBateaux[i]) != true) {
+                l = randRange(0, 10);
+                c = randRange(0, 10);
+                d = randRange(1, 3);
+            }
+            /*
+             * Si la position est validée, on peut alors envoyer les informations du bateau à la fonction initBateaux qui va s'occuper de le placer sur la grille.
+             */
+            if (posOk(grilleOrdi, l, c, d, tailleBateaux[i]) == true) {
+                initBateaux(grilleOrdi,l, c, d, tailleBateaux[i], i /*Numéro du bateau*/);
+            }
+        }
+
+        debutDuJeu = true;
+        AfficherGrilleEnConsole(grilleOrdi);
+        AfficherGrilleEnConsole(grilleJeu);
+    }
+
     public static boolean posOk(int [][]grille, int l, int c, int d, int t){
         boolean isPosOk = true;
 
@@ -136,7 +189,32 @@ public class Grille_de_jeu extends Parent {
         return isPosOk;
     }
 
-    public static void AfficherGrille(int grille[][]){
+    public static void initBateaux(int grille[][], int l, int c, int d, int t, int typeDeBateau){
+        /*
+         * On teste si le bateau est horizontale
+         */
+        if (d == 1){
+            for(int i = 0; i<t; i++){
+                /*
+                 * On incrémente la coordonnée de la colonne, de 0 a la taille du bateau, pour remplacer chaque 0 par le numéro du bateau
+                 */
+                grille[l][c+i] = typeDeBateau;
+            }
+        }
+        /*
+         * On teste si le bateau est vertical
+         */
+        if (d == 2){
+            for(int i = 0; i<t; i++){
+                /*
+                 * On incrémente la coordonnée de la ligne, de 0 a la taille du bateau, pour remplacer chaque 0 par le numéro du bateau
+                 */
+                grille[l+i][c] = typeDeBateau;
+            }
+        }
+    }
+
+    public static void AfficherGrilleEnConsole(int grille[][]){
 
         /*
          * Variable utilisée pour afficher le numéro de la ligne
