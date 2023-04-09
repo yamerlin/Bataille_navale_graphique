@@ -264,45 +264,64 @@ public class Grille_de_jeu extends Parent {
     }
 
     public void tirJoueur(int l, int c){
-        if (grilleOrdi[l][c] != 0 && grilleOrdi[l][c] != 6) {
-            System.out.println("Tu as touché l'ennemi !");
-            Cell cell = getCell(c, l);
-            cell.setFill(Color.RED);
-            grilleOrdi[l][c] = 6;
-        }
-        else{
-            if(grilleOrdi[l][c] == 0) {
-                System.out.println("Tu as tiré dans l'eau !");
-
+        if(vainqueur(grilleOrdi) == false && vainqueur(grilleJeu) == false) {
+            if (grilleOrdi[l][c] != 0 && grilleOrdi[l][c] != 6) {
+                System.out.println("Tu as touché l'ennemi !");
                 Cell cell = getCell(c, l);
-                cell.setFill(Color.BLUE);
+                cell.setFill(Color.RED);
+                grilleOrdi[l][c] = 6;
+            } else {
+                if (grilleOrdi[l][c] == 0) {
+                    System.out.println("Tu as tiré dans l'eau !");
+
+                    Cell cell = getCell(c, l);
+                    cell.setFill(Color.BLUE);
+                }
             }
         }
     }
 
     public void tirOrdi(){
-        int l;
-        int c;
+        if(vainqueur(grilleJeu) == false && vainqueur(grilleOrdi) == false) {
+            int l;
+            int c;
 
-        do {
-            l = randRange(0, 10);
-            c = randRange(0, 10);
-        }
-        while(grilleJeu[l][c]==6 || grilleJeu[l][c]==7);//Re tirer tant que la case a déjà été tiré
+            do {
+                l = randRange(0, 10);
+                c = randRange(0, 10);
+            }
+            while (grilleJeu[l][c] == 6 || grilleJeu[l][c] == 7);//Re tirer tant que la case a déjà été tiré
 
-        if (grilleJeu[l][c] != 0 && grilleJeu[l][c] != 6 && grilleJeu[l][c] !=7) {
-            System.out.println("L'ennemi t'as touché !");
-            Cell cell = getCell(c, l);
-            cell.setFill(Color.RED);
-            grilleJeu[l][c] = 6;
-        }
-        else{
-            if(grilleJeu[l][c] == 0) {
-                System.out.println("L'ennemi a tiré dans l'eau !");
+            if (grilleJeu[l][c] != 0 && grilleJeu[l][c] != 6 && grilleJeu[l][c] != 7) {
+                System.out.println("L'ennemi t'as touché !");
                 Cell cell = getCell(c, l);
-                cell.setFill(Color.BLUE);
-                grilleJeu[l][c] = 7;
+                cell.setFill(Color.RED);
+                grilleJeu[l][c] = 6;
+            } else {
+                if (grilleJeu[l][c] == 0) {
+                    System.out.println("L'ennemi a tiré dans l'eau !");
+                    Cell cell = getCell(c, l);
+                    cell.setFill(Color.BLUE);
+                    grilleJeu[l][c] = 7;
+                }
             }
         }
+    }
+
+    public static boolean vainqueur(int grille[][]){
+        boolean isVainqueur = true;
+
+        /*
+         * On vérifie tout le tableau à la recherche d'un élément différent de 0 (de l'eau) ou 6 (un bateau coulé) qui signifierait que la partie n'est pas encore gagnée (un bateau toujours présent)
+         */
+        for(int i = 0; i<10; i++){
+            for (int j=0; j<10; j++){
+                if(grille[i][j] != 0 && grille[i][j] != 6){
+                    isVainqueur = false;
+                }
+            }
+        }
+
+        return isVainqueur;
     }
 }
