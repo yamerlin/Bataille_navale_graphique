@@ -77,7 +77,8 @@ public class Fenetre_de_jeu extends Parent {
             }
 
             //Sinon, on place les bateaux
-            else {
+            else if(grilleDeJeuOrdi.finDePartie == false && grilleDeJeuJoueur.finDePartie == false)
+            {
 
                 //Récupérer la cellule ou l'utilisateur clique (seulement sur la grille de jeu du joueur)
                 Cell cell = (Cell) event.getSource();
@@ -112,13 +113,19 @@ public class Fenetre_de_jeu extends Parent {
                 return;
             }
             //Si le jeu est commencé on peut cliquer sur la grille de l'ordinateur pour découvrir les bateaux
-            else{
+            else if(grilleDeJeuJoueur.finDePartie == false && grilleDeJeuOrdi.finDePartie == false)
+            {
                 Cell cell = (Cell) event.getSource();
                 cell = grilleDeJeuOrdi.getCell(cell.x, cell.y);
                 System.out.println("X : " + cell.x + "    Y : " + cell.y);
 
-                grilleDeJeuOrdi.tirJoueur(cell.y, cell.x);
+                //Faire tirer l'ordinateur
                 grilleDeJeuJoueur.tirOrdi();
+
+                //Vérifier si l'ordinateur n'a pas gagné juste avant de faire tirer le joueur
+                if(grilleDeJeuJoueur.finDePartie == false){
+                    grilleDeJeuOrdi.tirJoueur(cell.y, cell.x);
+                }
             }
         });
 

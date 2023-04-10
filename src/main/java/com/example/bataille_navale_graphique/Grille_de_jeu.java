@@ -25,6 +25,8 @@ import javafx.scene.text.Text;
 public class Grille_de_jeu extends Parent {
     boolean debutDuJeu = false;
 
+    public boolean finDePartie = false;
+
     public static int [][] grilleOrdi = new int[10][10];
 
     public static int [][] grilleJeu = new int[10][10];
@@ -309,23 +311,36 @@ public class Grille_de_jeu extends Parent {
         }
     }
 
-    public static boolean vainqueur(int grille[][]){
+    public boolean vainqueur(int grille[][]){
         boolean isVainqueur = true;
+        int quiEstLeVainqueur = 0;
 
         /*
          * On vérifie tout le tableau à la recherche d'un élément différent de 0 (de l'eau) ou 6 (un bateau coulé) qui signifierait que la partie n'est pas encore gagnée (un bateau toujours présent)
          */
         for(int i = 0; i<10; i++){
             for (int j=0; j<10; j++){
-                if(grille[i][j] != 0 && grille[i][j] != 6){
+                if(grille[i][j] != 0 && grille[i][j] != 6 && grille[i][j] != 7){
                     isVainqueur = false;
                 }
             }
         }
 
         if(isVainqueur == true){
+            //Le vainqueur est l'ordinateur
+            if(grille == grilleJeu){
+                quiEstLeVainqueur = 0;
+                finDePartie = true;
+            }
+
+            //Le vainqueur est le joueur
+            if(grille == grilleOrdi){
+                quiEstLeVainqueur = 1;
+                finDePartie = true;
+            }
+
             //Fenetre_de_jeu.mainWindow.hide();
-            new Fenetre_de_fin_de_partie();
+            new Fenetre_de_fin_de_partie(quiEstLeVainqueur);
         }
 
         return isVainqueur;
