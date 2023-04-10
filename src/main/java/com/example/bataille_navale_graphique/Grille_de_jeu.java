@@ -4,6 +4,8 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Cell;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
@@ -19,6 +21,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
@@ -55,6 +58,7 @@ public class Grille_de_jeu extends Parent {
             for (int x = 0; x < 10; x++) {
                 Cell c = new Cell(x,y,this);
                 c.setOnMouseClicked(handler);
+
                 row.getChildren().add(c);
             }
             rows.getChildren().add(row);
@@ -76,6 +80,19 @@ public class Grille_de_jeu extends Parent {
         }
     }
 
+    public Image ImagesDesBateaux(int partieDuBateau){
+        Image head = new Image(this.getClass().getResource("/images/head.png").toExternalForm());
+        Image body = new Image(this.getClass().getResource("/images/body.png").toExternalForm());
+        Image tail = new Image(this.getClass().getResource("/images/tail.png").toExternalForm());
+
+        Image[] tableauImagesDesBateaux = new Image[3];
+        tableauImagesDesBateaux[0] = head;
+        tableauImagesDesBateaux[1] = body;
+        tableauImagesDesBateaux[2] = tail;
+
+        return tableauImagesDesBateaux[partieDuBateau];
+    }
+
     public Cell getCell(int x, int y) {
         return (Cell)((HBox)rows.getChildren().get(y)).getChildren().get(x);
     }
@@ -89,10 +106,23 @@ public class Grille_de_jeu extends Parent {
         if(bateau.sensDuBateau == 1) {
             if (posOk(grilleJeu, l, c, bateau.sensDuBateau, bateau.tailleBateau) == true) {
                 for (int i = c; i < c + bateau.tailleBateau; i++) {
-                    Cell cell = getCell(i, l);
-                    cell.setFill(Color.BLACK);
                     grilleJeu[l][i] = bateau.numeroDuBateau;
                 }
+
+                Cell cell = getCell(c, l);
+                cell.setFill(new ImagePattern(ImagesDesBateaux(0)));
+                cell.setRotate(-90);
+
+                for(int i = c + 1; i < c + bateau.tailleBateau - 1; i++){
+                    Cell cell2 = getCell(i, l);
+                    cell2.setFill(new ImagePattern(ImagesDesBateaux(1)));
+                    cell2.setRotate(-90);
+                }
+
+                Cell cell3 = getCell(c + bateau.tailleBateau - 1, l);
+                cell3.setFill(new ImagePattern(ImagesDesBateaux(2)));
+                cell3.setRotate(-90);
+
                 isBateauPlacer = true;
             }
         }
@@ -101,10 +131,21 @@ public class Grille_de_jeu extends Parent {
         if(bateau.sensDuBateau == 2) {
             if (posOk(grilleJeu, l, c, bateau.sensDuBateau, bateau.tailleBateau) == true) {
                 for (int i = l; i < l + bateau.tailleBateau; i++) {
-                    Cell cell = getCell(c, i);
-                    cell.setFill(Color.BLACK);
                     grilleJeu[i][c] = bateau.numeroDuBateau;
                 }
+
+                Cell cell = getCell(c, l);
+                cell.setFill(new ImagePattern(ImagesDesBateaux(0)));
+
+                for(int i = l + 1; i < l + bateau.tailleBateau - 1; i++){
+                    Cell cell2 = getCell(c, i);
+                    cell2.setFill(new ImagePattern(ImagesDesBateaux(1)));
+                }
+
+                Cell cell3 = getCell(c, l + bateau.tailleBateau - 1);
+                cell3.setFill(new ImagePattern(ImagesDesBateaux(2)));
+
+
                 isBateauPlacer = true;
             }
         }
