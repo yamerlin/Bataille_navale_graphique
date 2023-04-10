@@ -64,8 +64,6 @@ public class Grille_de_jeu extends Parent {
 
     public class Cell extends Rectangle {
         public int x, y;
-        public boolean wasShot = false;
-
         private Grille_de_jeu grille;
 
         public Cell(int x, int y, Grille_de_jeu grille) {
