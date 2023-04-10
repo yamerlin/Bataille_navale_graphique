@@ -282,6 +282,9 @@ public class Grille_de_jeu extends Parent {
                 }
             }
         }
+
+        //Vérifier que la partie n'a pas été gagné au moment du tir du joueur
+        vainqueur(grilleOrdi);
     }
 
     public void tirOrdi(){
