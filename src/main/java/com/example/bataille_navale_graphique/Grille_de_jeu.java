@@ -362,7 +362,7 @@ public class Grille_de_jeu extends Parent {
                 l = randRange(0, 10);
                 c = randRange(0, 10);
             }
-            while (grilleJeu[l][c] == 6 || grilleJeu[l][c] == 7);//Re tirer tant que la case a déjà été tiré
+            while (grilleJeu[l][c] == 6 || grilleJeu[l][c] == 7);//Re tirer tant que la case a déjà été tiré, pour être sûr que l'IA touche une case différente à chaque tir
 
             if (grilleJeu[l][c] != 0 && grilleJeu[l][c] != 6 && grilleJeu[l][c] != 7) {
                 System.out.println("L'ennemi t'as touché !");

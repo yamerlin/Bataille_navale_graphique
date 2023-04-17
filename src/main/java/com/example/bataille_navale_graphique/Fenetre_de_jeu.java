@@ -35,10 +35,13 @@ public class Fenetre_de_jeu extends Parent {
     public static Stage mainWindow;
     public static Scene scene;
     public static Text description;
-
+    public static Text textGrilleJoueur;
+    public static Text textGrilleOrdi;
     MenuBar menuBar = new MenuBar();
     HBox hbox;
+    HBox hbox2;
     VBox vbox;
+
     int numeroDuBateau = 1;
     int[] tailleBateaux = new int[]{ 0,5,4,3,3,2 };
     int sensDuBateau = 1;
@@ -59,7 +62,6 @@ public class Fenetre_de_jeu extends Parent {
         MenuItem tricher = new MenuItem("Tricher");
         menuHautDeLEcran.getItems().addAll(rejouer,quitter,tricher);
         menuBar.getMenus().add(menuHautDeLEcran);
-
 
         //Créer les actions lors des clicks sur les items du menu
 
@@ -152,17 +154,15 @@ public class Fenetre_de_jeu extends Parent {
                         description = new Text("Cliquer sur la grille ennemi pour tenter de toucher ses bateaux");
                         description.setStyle("-fx-font: 24 arial;");
 
-                        vbox = new VBox(50, description, hbox);
+                        vbox = new VBox(50, description, hbox, hbox2);
 
                         hbox.setAlignment(Pos.CENTER);
                         vbox.setAlignment(Pos.CENTER);
 
                         root.setCenter(vbox);
                     }
-
                 }
             }
-
         });
 
         grilleDeJeuOrdi = new Grille_de_jeu(true, event -> {
@@ -188,10 +188,18 @@ public class Fenetre_de_jeu extends Parent {
             }
         });
 
+        textGrilleJoueur = new Text("Grille du Joueur");
+        textGrilleJoueur.setStyle("-fx-font: 24 arial;");
+
+        textGrilleOrdi = new Text("Grille de l'Ennemi");
+        textGrilleOrdi.setStyle("-fx-font: 24 arial;");
+
         hbox = new HBox(50, grilleDeJeuJoueur, grilleDeJeuOrdi);
-        vbox = new VBox(50, description, hbox);
+        hbox2 = new HBox(400, textGrilleJoueur, textGrilleOrdi);
+        vbox = new VBox(50, description, hbox, hbox2);
 
         hbox.setAlignment(Pos.CENTER);
+        hbox2.setAlignment(Pos.CENTER);
         vbox.setAlignment(Pos.CENTER);
 
         root.setCenter(vbox);

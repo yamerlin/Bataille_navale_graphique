@@ -33,6 +33,7 @@ public class Fenetre_de_menu extends Application {
         Button lancer_partie = new Button();
         lancer_partie.setPrefSize(200.0, 100.0);
         lancer_partie.setText("Jouer");
+        lancer_partie.setStyle("-fx-font: 24 Helvetica;");
         lancer_partie.setLayoutX(300.0);
         lancer_partie.setLayoutY(50.0);
         lancer_partie.setOnAction(new EventHandler<ActionEvent>() {
@@ -45,6 +46,7 @@ public class Fenetre_de_menu extends Application {
         Button quitter = new Button();
         quitter.setPrefSize(200.0, 100.0);
         quitter.setText("Quitter");
+        quitter.setStyle("-fx-font: 24 Helvetica;");
         quitter.setLayoutX(300.0);
         quitter.setLayoutY(220.0);
         quitter.setOnAction(new EventHandler<ActionEvent>() {
