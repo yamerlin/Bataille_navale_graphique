@@ -2,7 +2,7 @@
 
 Executer "Fenetre_de_menu" pour lancer le jeu.
 
-<br><br>
+<br>
 
 <p>
  * Ce programme est un jeu de bataille navale contre un ordinateur qui tire aléatoirement, via une interface graphique JavaFX <br>
