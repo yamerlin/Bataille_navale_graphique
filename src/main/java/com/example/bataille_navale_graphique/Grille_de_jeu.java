@@ -8,8 +8,8 @@ import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -19,11 +19,11 @@ import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 public class Grille_de_jeu extends Parent {
     boolean debutDuJeu = false;
@@ -53,17 +53,42 @@ public class Grille_de_jeu extends Parent {
 
     public Grille_de_jeu(boolean ordinateur, EventHandler<? super MouseEvent> handler){
 
+        /*HBox grille = new HBox();
+        HBox rowABCD = new HBox();
+        for(int i = 0; i<10; i++){
+            String[] lettre = new String[]{"A","B","C","D","E","F","G","H","I","J"};
+            Text ABCD = new Text(lettre[i]);
+            ABCD.setStyle("-fx-font: 30 arial;");
+            ABCD.setTextAlignment(TextAlignment.CENTER);
+
+            StackPane pane = new StackPane(ABCD);
+            pane.setMinSize(51,51);
+
+            rowABCD.getChildren().add(pane);
+        }
+        grille.getChildren().add(rowABCD);*/
+
         for(int y = 0; y < 10; y++) {
+            //Créer 10 lignes
             HBox row = new HBox();
+
             for (int x = 0; x < 10; x++) {
+                //Crée 10 cellules et lui transmettre les variables x et y des boucles for pour qu'elle les utilise en tant que coordonnées de la cellule
                 Cell c = new Cell(x,y,this);
+
+                //Détecter les cliques
                 c.setOnMouseClicked(handler);
 
+                //Ajouter 10 cellules dans chaque ligne
                 row.getChildren().add(c);
             }
+
+            //Ajouter les dix lignes (elles se mettent automatiquement les unes sous les autres verticalement dans une boite verticale).
             rows.getChildren().add(row);
         }
+
         getChildren().add(rows);
+
     }
 
     public class Cell extends Rectangle {
@@ -80,6 +105,7 @@ public class Grille_de_jeu extends Parent {
         }
     }
 
+    //Fonction pour charger les images
     public Image ImagesDesBateaux(int partieDuBateau){
         Image head = new Image(this.getClass().getResource("/images/head.png").toExternalForm());
         Image body = new Image(this.getClass().getResource("/images/body.png").toExternalForm());
@@ -93,6 +119,7 @@ public class Grille_de_jeu extends Parent {
         return tableauImagesDesBateaux[partieDuBateau];
     }
 
+    //Récuperer les coordonées x et y de la cellule
     public Cell getCell(int x, int y) {
         return (Cell)((HBox)rows.getChildren().get(y)).getChildren().get(x);
     }
@@ -358,7 +385,7 @@ public class Grille_de_jeu extends Parent {
         int quiEstLeVainqueur = 0;
 
         /*
-         * On vérifie tout le tableau à la recherche d'un élément différent de 0 (de l'eau) ou 6 (un bateau coulé) qui signifierait que la partie n'est pas encore gagnée (un bateau toujours présent)
+         * On vérifie tout le tableau à la recherche d'un élément différent de 0 (de l'eau) ou 6 (un bateau coulé) qui signifierait que la partie n'est pas encore gagnée (un bateau toujours présent), ou 7, qui signifie un tir dans l'eau
          */
         for(int i = 0; i<10; i++){
             for (int j=0; j<10; j++){

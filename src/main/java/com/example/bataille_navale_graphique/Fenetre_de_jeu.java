@@ -9,6 +9,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -19,6 +22,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.scene.image.ImageView;
 
@@ -29,6 +33,12 @@ import com.example.bataille_navale_graphique.Grille_de_jeu.Cell;
 public class Fenetre_de_jeu extends Parent {
 
     public static Stage mainWindow;
+    public static Scene scene;
+    public static Text description;
+
+    MenuBar menuBar = new MenuBar();
+    HBox hbox;
+    VBox vbox;
     int numeroDuBateau = 1;
     int[] tailleBateaux = new int[]{ 0,5,4,3,3,2 };
     int sensDuBateau = 1;
@@ -40,7 +50,42 @@ public class Fenetre_de_jeu extends Parent {
     //@Override
     public void CreerFenetre() {
         mainWindow = new Stage();
-        Scene scene = new Scene(Jeu());
+        scene = new Scene(Jeu());
+
+        //Créer la bar de menu en haut de l'écran
+        Menu menuHautDeLEcran = new Menu("Menu");
+        MenuItem rejouer = new MenuItem("Rejouer");
+        MenuItem quitter = new MenuItem("Quitter");
+        MenuItem tricher = new MenuItem("Tricher");
+        menuHautDeLEcran.getItems().addAll(rejouer,quitter,tricher);
+        menuBar.getMenus().add(menuHautDeLEcran);
+
+
+        //Créer les actions lors des clicks sur les items du menu
+
+        rejouer.setOnAction(e -> {
+            for(int i = 0; i < 10; i++) {
+                for(int j = 0; j < 10; j++) {
+                    Grille_de_jeu.grilleJeu[i][j] = 0;
+                }
+            }
+            for(int i = 0; i < 10; i++) {
+                for(int j = 0; j < 10; j++) {
+                    Grille_de_jeu.grilleOrdi[i][j] = 0;
+                }
+            }
+            mainWindow.close();
+            Fenetre_de_jeu.mainWindow.close();
+            new Fenetre_de_jeu();
+        });
+
+        quitter.setOnAction(
+                e -> {System.exit(0);
+        });
+
+        tricher.setOnAction(e -> {
+            tricher();
+        });
 
         mainWindow.setTitle("Bataille navale");
         mainWindow.setScene(scene);
@@ -67,6 +112,9 @@ public class Fenetre_de_jeu extends Parent {
         BorderPane root = new BorderPane();
         root.setPrefSize(1200,800);
 
+        description = new Text("Placer vos bateaux avec des clics dans la grille du joueur. Utiliser R pour effectuer une rotation du bateau");
+        description.setStyle("-fx-font: 24 arial;");
+        description.setTextAlignment(TextAlignment.CENTER);
 
 
         grilleDeJeuJoueur = new Grille_de_jeu(false, event -> {
@@ -100,6 +148,16 @@ public class Fenetre_de_jeu extends Parent {
                     //Si tous les bateaux du joueur ont été placés, placer les bateaux de l'ordinateur
                     if (numeroDuBateau == 6) {
                         grilleDeJeuOrdi.initGrilleOrdi();
+
+                        description = new Text("Cliquer sur la grille ennemi pour tenter de toucher ses bateaux");
+                        description.setStyle("-fx-font: 24 arial;");
+
+                        vbox = new VBox(50, description, hbox);
+
+                        hbox.setAlignment(Pos.CENTER);
+                        vbox.setAlignment(Pos.CENTER);
+
+                        root.setCenter(vbox);
                     }
 
                 }
@@ -115,6 +173,7 @@ public class Fenetre_de_jeu extends Parent {
             //Si le jeu est commencé on peut cliquer sur la grille de l'ordinateur pour découvrir les bateaux
             else if(grilleDeJeuJoueur.finDePartie == false && grilleDeJeuOrdi.finDePartie == false)
             {
+
                 Cell cell = (Cell) event.getSource();
                 cell = grilleDeJeuOrdi.getCell(cell.x, cell.y);
                 System.out.println("X : " + cell.x + "    Y : " + cell.y);
@@ -129,11 +188,26 @@ public class Fenetre_de_jeu extends Parent {
             }
         });
 
-        HBox hbox = new HBox(50, grilleDeJeuJoueur, grilleDeJeuOrdi);
-        hbox.setAlignment(Pos.CENTER);
+        hbox = new HBox(50, grilleDeJeuJoueur, grilleDeJeuOrdi);
+        vbox = new VBox(50, description, hbox);
 
-        root.setCenter(hbox);
+        hbox.setAlignment(Pos.CENTER);
+        vbox.setAlignment(Pos.CENTER);
+
+        root.setCenter(vbox);
+        root.setTop(menuBar);
+
 
         return root;
+    }
+
+    public void tricher(){
+        for(int i=0; i<10; i++){
+            for(int j=0; j<10; j++){
+                if(Grille_de_jeu.grilleOrdi[i][j] !=0 && Grille_de_jeu.grilleOrdi[i][j] !=6 && Grille_de_jeu.grilleOrdi[i][j] !=7){
+                    grilleDeJeuOrdi.getCell(j,i).setFill(Color.GREENYELLOW);
+                }
+            }
+        }
     }
 }
