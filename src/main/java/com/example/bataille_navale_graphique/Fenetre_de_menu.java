@@ -19,7 +19,7 @@ import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
 
 /**
- * Ce programme est un jeu de bataille navale contre un ordinateur qui tire aléatoirement, via une interface graphique en JavaFX <br>
+ * Ce programme est un jeu de bataille navale contre un ordinateur qui tire aléatoirement, via une interface graphique utilisant JavaFX <br>
  * Réalisé dans le cadre du cours de programmation d'environnement en Java <br>
  * Auteur : MERLIN Yann <br>
  * Professeur : Samuel LINDSAY <br>
