@@ -32,30 +32,90 @@ import com.example.bataille_navale_graphique.Grille_de_jeu.Cell;
 
 public class Fenetre_de_jeu extends Parent {
 
+    /**
+     * Fenêtre principale
+     */
     public static Stage mainWindow;
+
+    /**
+     * Scene de jeu, contenu dans la fenêtre principale
+     */
     public static Scene scene;
+
+    /**
+     * Text pour décrire au joueur les actions à réaliser
+     */
     public static Text description;
+
+    /**
+     * Text pour indiquer au joueur quelle grille est la grille du Joueur
+     */
     public static Text textGrilleJoueur;
+
+    /**
+     * Text pour indiquer au joueur quelle grille est la grille de l'Ordinateur
+     */
     public static Text textGrilleOrdi;
+
+    /**
+     * Bar de menu en haut de l'écran pour contenir les options quitter, rejouer et tricher
+     */
     MenuBar menuBar = new MenuBar();
+
+    /**
+     * Boite horizontale pour contenir les grilles
+     */
     HBox hbox;
+
+    /**
+     * Boite horizontale pour contenir les texts
+     */
     HBox hbox2;
+
+    /**
+     * Boite verticale pour contenir les deux boites horizontale
+     */
     VBox vbox;
 
+    /**
+     * Variable Integer pour compter les bateaux lors de leur placement
+     */
     int numeroDuBateau = 1;
+
+    /**
+     * Tableau d'entier pour contenir les tailles en nombre de cases de chaque bateau, pas de bateau a la position [0] car on commence avec le bateau numéro 1
+     */
     int[] tailleBateaux = new int[]{ 0,5,4,3,3,2 };
+
+    /**
+     * Variable qui retient le sens du bateau lors de son placement, 1 = Horizontale et 2 = Verticale
+     */
     int sensDuBateau = 1;
+
+    /**
+     * Constructeur de Fenetre_de_jeu, appel la fonction CreerFenetre()
+     */
     public Fenetre_de_jeu() {
         this.CreerFenetre();
     }
+
+    /**
+     * Déclaration des grilles de jeu, de la classe Grille_de_jeu
+     */
     public Grille_de_jeu grilleDeJeuJoueur, grilleDeJeuOrdi;
 
     //@Override
-    public void CreerFenetre() {
-        mainWindow = new Stage();
-        scene = new Scene(Jeu());
 
-        //Créer la bar de menu en haut de l'écran
+    /**
+     * Fonction qui crée la fenêtre de jeu graphique
+     */
+    public void CreerFenetre() {
+
+        //Créer un stage et une scene, la scène est créée à partir d'un border pane retourner par la fonction Jeu()
+        mainWindow = new Stage();
+        scene = new Scene(Jeu()); //Appel la fonction Jeu() qui contient le placement et les tirs sur les bateaux
+
+        //Créer la bare de menu en haut de l'écran
         Menu menuHautDeLEcran = new Menu("Menu");
         MenuItem rejouer = new MenuItem("Rejouer");
         MenuItem quitter = new MenuItem("Quitter");
@@ -63,9 +123,12 @@ public class Fenetre_de_jeu extends Parent {
         menuHautDeLEcran.getItems().addAll(rejouer,quitter,tricher);
         menuBar.getMenus().add(menuHautDeLEcran);
 
-        //Créer les actions lors des clicks sur les items du menu
 
+        //Créer les actions lors des cliques sur les items du menu
+
+        //Bouton rejouer
         rejouer.setOnAction(e -> {
+            //Remplir de zero les tableaux des grilles de jeu pour réinitialiser les positions des bateaux
             for(int i = 0; i < 10; i++) {
                 for(int j = 0; j < 10; j++) {
                     Grille_de_jeu.grilleJeu[i][j] = 0;
@@ -76,22 +139,31 @@ public class Fenetre_de_jeu extends Parent {
                     Grille_de_jeu.grilleOrdi[i][j] = 0;
                 }
             }
+
+            //Fermer la fenêtre de jeu en cours
             mainWindow.close();
             Fenetre_de_jeu.mainWindow.close();
+
+            //Ouvrir une nouvelle fenêtre de jeu
             new Fenetre_de_jeu();
         });
 
+        //Bouton quitter
         quitter.setOnAction(
+                //Tuer le programme
                 e -> {System.exit(0);
         });
 
-        tricher.setOnAction(e -> {
-            tricher();
+        //Bouton tricher
+        tricher.setOnAction(
+                //Appeler la fonction tricher()
+                e -> {tricher();
         });
 
         mainWindow.setTitle("Bataille navale");
         mainWindow.setScene(scene);
         mainWindow.setResizable(false);
+        //Montrer la fenêtre de jeu
         mainWindow.show();
 
         //ROTATION DU BATEAU AVEC LA TOUCHE R
@@ -99,10 +171,13 @@ public class Fenetre_de_jeu extends Parent {
             @Override
             public void handle(KeyEvent event) {
                 switch (event.getCode()) {
+                    //Si un appui sur la touche R est détecté
                     case R : if(sensDuBateau == 1){
+                        //Le sens du bateau devient verticale (2) s'il était précedement horizontale (1)
                         sensDuBateau = 2;
                     }
                     else{
+                        //Le sens du bateau devient horizontale (1) s'il était précedement verticale (2)
                         sensDuBateau = 1;
                     }
                 }
@@ -110,18 +185,24 @@ public class Fenetre_de_jeu extends Parent {
         });
     }
 
+    /**
+     * Fonction contenant les mécanismes de jeu, c'est-à-dire création des grilles, placement des bateaux et tirs sur les bateaux
+     * @return "root", qui est un border pane contenant les éléments de la scène (grille de jeu et textes)
+     */
     public Parent Jeu(){
+        //Créer le border pane
         BorderPane root = new BorderPane();
         root.setPrefSize(1200,800);
 
+        //Texte description de l'action à réaliser
         description = new Text("Placer vos bateaux avec des clics dans la grille du joueur. Utiliser R pour effectuer une rotation du bateau");
         description.setStyle("-fx-font: 24 arial;");
         description.setTextAlignment(TextAlignment.CENTER);
 
-
+        //Créer la grille du joueur
         grilleDeJeuJoueur = new Grille_de_jeu(false, event -> {
 
-            //Si le jeu a deja commencé, on fait un return pour empécher de placer d'autres bateaux
+            //Si le jeu a deja commencé, on fait un return pour empêcher de placer d'autres bateaux
             if(grilleDeJeuOrdi.debutDuJeu == true){
                 return;
             }
@@ -165,6 +246,7 @@ public class Fenetre_de_jeu extends Parent {
             }
         });
 
+        //Créer la grille de jeu de l'ordinateur
         grilleDeJeuOrdi = new Grille_de_jeu(true, event -> {
             //Si le jeu n'a pas encore commencé (tous les bateaux ne sont pas placés) alors on ne peut rien faire sur la grille de l'ordinateur (return)
             if(grilleDeJeuOrdi.debutDuJeu != true){
@@ -209,9 +291,14 @@ public class Fenetre_de_jeu extends Parent {
         return root;
     }
 
+    /**
+     * Method tricher(), lis le tableau de position des bateaux de l'ordinateur est change de couleur les cases correspondantes.
+     */
     public void tricher(){
+        //Défiler tout le tableau de position des bateaux de l'ordinateur
         for(int i=0; i<10; i++){
             for(int j=0; j<10; j++){
+                //Si un bateau est trouvé (soit un chiffre différent de l'eau(0), d'un tir a l'eau(7) et d'un bateau déjà touché(6)), alors on colorie la case correspondent en vert fluo sur la grille de l'ordinateur
                 if(Grille_de_jeu.grilleOrdi[i][j] !=0 && Grille_de_jeu.grilleOrdi[i][j] !=6 && Grille_de_jeu.grilleOrdi[i][j] !=7){
                     grilleDeJeuOrdi.getCell(j,i).setFill(Color.GREENYELLOW);
                 }
