@@ -217,7 +217,7 @@ public class Fenetre_de_jeu extends Parent {
                 //Printer les coordonnées de cette cellule
                 System.out.println("X : " + cell.x + "    Y : " + cell.y);
 
-                cell = grilleDeJeuJoueur.getCell(cell.x, cell.y);
+                cell = grilleDeJeuJoueur.recupererCell(cell.x, cell.y);
 
                 //cell.setFill(Color.BLACK);
 
@@ -257,7 +257,7 @@ public class Fenetre_de_jeu extends Parent {
             {
 
                 Cell cell = (Cell) event.getSource();
-                cell = grilleDeJeuOrdi.getCell(cell.x, cell.y);
+                cell = grilleDeJeuOrdi.recupererCell(cell.x, cell.y);
                 System.out.println("X : " + cell.x + "    Y : " + cell.y);
 
                 //Faire tirer l'ordinateur
@@ -300,7 +300,7 @@ public class Fenetre_de_jeu extends Parent {
             for(int j=0; j<10; j++){
                 //Si un bateau est trouvé (soit un chiffre différent de l'eau(0), d'un tir a l'eau(7) et d'un bateau déjà touché(6)), alors on colorie la case correspondent en vert fluo sur la grille de l'ordinateur
                 if(Grille_de_jeu.grilleOrdi[i][j] !=0 && Grille_de_jeu.grilleOrdi[i][j] !=6 && Grille_de_jeu.grilleOrdi[i][j] !=7){
-                    grilleDeJeuOrdi.getCell(j,i).setFill(Color.GREENYELLOW);
+                    grilleDeJeuOrdi.recupererCell(j,i).setFill(Color.GREENYELLOW);
                 }
             }
         }

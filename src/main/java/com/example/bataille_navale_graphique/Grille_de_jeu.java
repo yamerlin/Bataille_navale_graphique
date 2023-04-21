@@ -26,12 +26,24 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 public class Grille_de_jeu extends Parent {
+    /**
+     * Variable booléenne indiquant si le jeu a commencé ou non
+     */
     boolean debutDuJeu = false;
 
+    /**
+     * Variable booléenne indiquant si le jeu est terminé ou non
+     */
     public boolean finDePartie = false;
 
+    /**
+     * Tableau 2D d'entiers contenant les positions des tirs reçus et des bateaux de l'ordinateur
+     */
     public static int [][] grilleOrdi = new int[10][10];
 
+    /**
+     * Tableau 2D d'entiers contenant les positions des tirs reçus et des bateaux du joueur
+     */
     public static int [][] grilleJeu = new int[10][10];
 
     /*
@@ -49,8 +61,16 @@ public class Grille_de_jeu extends Parent {
         return rand.nextInt(b-a)+a;
     }
 
-    private VBox rows = new VBox();
+    /**
+     * Boite verticale pour placer les lignes de cellules pour créer la grille de cellules à afficher
+     */
+    private VBox lignes = new VBox();
 
+    /**
+     * Constructeur utilisé pour créer les grille de jeu à afficher
+     * @param ordinateur Variable booléenne indiquant s'il s'agit de la grille de l'ordinateur ou non
+     * @param handler Variable utilisé pour détecter les cliques sur les grilles
+     */
     public Grille_de_jeu(boolean ordinateur, EventHandler<? super MouseEvent> handler){
 
         /*HBox grille = new HBox();
@@ -70,7 +90,7 @@ public class Grille_de_jeu extends Parent {
 
         for(int y = 0; y < 10; y++) {
             //Créer 10 lignes
-            HBox row = new HBox();
+            HBox ligne = new HBox();
 
             for (int x = 0; x < 10; x++) {
                 //Crée 10 cellules et lui transmettre les variables x et y des boucles for pour qu'elle les utilise en tant que coordonnées de la cellule
@@ -80,75 +100,129 @@ public class Grille_de_jeu extends Parent {
                 c.setOnMouseClicked(handler);
 
                 //Ajouter 10 cellules dans chaque ligne
-                row.getChildren().add(c);
+                ligne.getChildren().add(c);
             }
 
             //Ajouter les dix lignes (elles se mettent automatiquement les unes sous les autres verticalement dans une boite verticale).
-            rows.getChildren().add(row);
+            lignes.getChildren().add(ligne);
         }
 
-        getChildren().add(rows);
+        getChildren().add(lignes);
 
     }
 
+    /**
+     * Class interne à Grille_de_jeu qui défini les objets cellules composant les grilles de jeux. Basé sur la class Rectangle.
+     */
     public class Cell extends Rectangle {
+
+        //Coordonnés de la cellule
         public int x, y;
+
+        //Utilisé pour définir à quelle grille (joueur ou ordinateur) appartient la cellule
         private Grille_de_jeu grille;
 
+        /**
+         * Constructeur de cellule
+         * @param x Coordonné x de la cellule
+         * @param y Coordonné y de la cellule
+         * @param grille Grille a laquelle appartient la cellule
+         */
         public Cell(int x, int y, Grille_de_jeu grille) {
+            //Super est utilisé pour accéder le constructeur de rectangle, et donc créer un rectangle de 50 par 50 pixels
             super(50, 50);
+
+            //Assigner la coordonnée x a l'objet
             this.x = x;
+
+            //Assigner la coordonnée y a l'objet
             this.y = y;
+
+            //Assigner une grille à l'objet
             this.grille = grille;
+
+            //Remplissage bleu clair de la cellule
             setFill(Color.LIGHTBLUE);
+
+            //Bord noir de la cellule
             setStroke(Color.BLACK);
         }
     }
 
-    //Fonction pour charger les images
+    /**
+     * Method utilisé pour charger les image des bateaux
+     * @param partieDuBateau Integer indiquant la partie du bateau à récupérer (0 = head, 1 = body, 2 = tail)
+     * @return Retourne l'image du bateau que l'on a choisi
+     */
     public Image ImagesDesBateaux(int partieDuBateau){
+        //Charger les images des bateaux
         Image head = new Image(this.getClass().getResource("/images/head.png").toExternalForm());
         Image body = new Image(this.getClass().getResource("/images/body.png").toExternalForm());
         Image tail = new Image(this.getClass().getResource("/images/tail.png").toExternalForm());
 
+        //Créer un tableau d'images
         Image[] tableauImagesDesBateaux = new Image[3];
+
+        //Placer les images dans le tableau
         tableauImagesDesBateaux[0] = head;
         tableauImagesDesBateaux[1] = body;
         tableauImagesDesBateaux[2] = tail;
 
+        //Retourner l'image de bateau choisie du tableau
         return tableauImagesDesBateaux[partieDuBateau];
     }
 
-    //Récuperer les coordonées x et y de la cellule
-    public Cell getCell(int x, int y) {
-        return (Cell)((HBox)rows.getChildren().get(y)).getChildren().get(x);
+    /**
+     * Methode utilisée pour récupérer les coordinates x et y de la cellule
+     * @param x Coordonné x de la cellule à récupérer
+     * @param y Coordonné y de la cellule à récupérer
+     * @return Retourner la cellule
+     */
+    public Cell recupererCell(int x, int y) {
+        return (Cell)((HBox)lignes.getChildren().get(y)).getChildren().get(x);
     }
 
+    /**
+     * Méthode utilisée pour initialiser la grille de jeu, c'est-à-dire pour permettre au joueur de positionner ses bateaux
+     * @param bateau Objet de type bateau, contenant sa taille, son nom, son sens et son numéro
+     * @param l Integer représentant la ligne sur laquelle l'utilisateur veux placer son bateau
+     * @param c Integer représentant la colonne sur laquelle l'utilisateur veux placer son bateau
+     * @return Retourner la variable booléenne "isBateauPlacer" pour indiquer si le bateau a pu être placé à la position désirée ou non
+     */
     public boolean initGrilleJeu(Bateaux bateau,int l, int c){
+
+        //variable booléenne indiquant si le bateau a pu être placé à la position désirée ou non
         boolean isBateauPlacer = false;
+
 
         //PLACER LES BATEAUX DU JOUEUR
 
         //Si il est horizontale
         if(bateau.sensDuBateau == 1) {
+            //Si la position est correcte, validée par la fonction posOk
             if (posOk(grilleJeu, l, c, bateau.sensDuBateau, bateau.tailleBateau) == true) {
+                //Placer le numéro du bateau dans tous les emplacements du tableau 2D sur lesquelles le bateau est
                 for (int i = c; i < c + bateau.tailleBateau; i++) {
                     grilleJeu[l][i] = bateau.numeroDuBateau;
                 }
 
-                Cell cell = getCell(c, l);
+                //Récupérer la cellule correspondante et lui assigner l'image de la tete du bateau
+                Cell cell = recupererCell(c, l);
                 cell.setFill(new ImagePattern(ImagesDesBateaux(0)));
                 cell.setRotate(-90);
 
+                //Récupérer les cellules suivantes et leur assigner les images du corps du bateau
                 for(int i = c + 1; i < c + bateau.tailleBateau - 1; i++){
-                    Cell cell2 = getCell(i, l);
+                    Cell cell2 = recupererCell(i, l);
                     cell2.setFill(new ImagePattern(ImagesDesBateaux(1)));
                     cell2.setRotate(-90);
                 }
 
-                Cell cell3 = getCell(c + bateau.tailleBateau - 1, l);
+                //Récupérer la dernière cellule et lui assigner l'image de la queue du bateau
+                Cell cell3 = recupererCell(c + bateau.tailleBateau - 1, l);
                 cell3.setFill(new ImagePattern(ImagesDesBateaux(2)));
                 cell3.setRotate(-90);
+
 
                 isBateauPlacer = true;
             }
@@ -156,20 +230,25 @@ public class Grille_de_jeu extends Parent {
 
         //Si il est verticale
         if(bateau.sensDuBateau == 2) {
+            //Si la position est correcte, validée par la fonction posOk
             if (posOk(grilleJeu, l, c, bateau.sensDuBateau, bateau.tailleBateau) == true) {
+                //Placer le numéro du bateau dans tous les emplacements du tableau 2D sur lesquelles le bateau est
                 for (int i = l; i < l + bateau.tailleBateau; i++) {
                     grilleJeu[i][c] = bateau.numeroDuBateau;
                 }
 
-                Cell cell = getCell(c, l);
+                //Récupérer la cellule correspondante et lui assigner l'image de la tete du bateau
+                Cell cell = recupererCell(c, l);
                 cell.setFill(new ImagePattern(ImagesDesBateaux(0)));
 
+                //Récupérer les cellules suivantes et leur assigner les images du corps du bateau
                 for(int i = l + 1; i < l + bateau.tailleBateau - 1; i++){
-                    Cell cell2 = getCell(c, i);
+                    Cell cell2 = recupererCell(c, i);
                     cell2.setFill(new ImagePattern(ImagesDesBateaux(1)));
                 }
 
-                Cell cell3 = getCell(c, l + bateau.tailleBateau - 1);
+                //Récupérer la dernière cellule et lui assigner l'image de la queue du bateau
+                Cell cell3 = recupererCell(c, l + bateau.tailleBateau - 1);
                 cell3.setFill(new ImagePattern(ImagesDesBateaux(2)));
 
 
@@ -180,6 +259,11 @@ public class Grille_de_jeu extends Parent {
         return isBateauPlacer;
     }
 
+    /**
+     * Fonction qui place aléatoirement les bateaux de l'ordinateur sur sa grille.
+     * Utilise posOk pour valider la position de chaque bateau.
+     * Elle ne retourne rien puisqu'elle modifie seulement (indirectement, grâce à la fonction initBateaux) la grille de l'ordinateur qui est une variable commune à toute la classe bataille.
+     */
     public void initGrilleOrdi() {
         /*
          * Tableau contenant les tailles de chaque bateau, il commence à la position 1 au lieu de commencer à la position 0 pour correspondre au numéro du bateau (1,2,3,4 ou 5)
@@ -211,10 +295,21 @@ public class Grille_de_jeu extends Parent {
         }
 
         debutDuJeu = true;
-        AfficherGrilleEnConsole(grilleOrdi);
-        AfficherGrilleEnConsole(grilleJeu);
+        //AfficherGrilleEnConsole(grilleOrdi);
+        //AfficherGrilleEnConsole(grilleJeu);
     }
 
+    /**
+     * Fonction utilisée pour l'initialisation des grilles. Elle teste si les positions choisies pour les bateaux sont correctes.
+     * C'est-à-dire si le bateau ne dépasse pas de la grille ou s'il ne se superpose pas à un autre bateau.
+     *
+     * @param grille Grille sur laquelle le bateau est positionné
+     * @param l Entier compris entre 1 et 10 indiquant le numéro de ligne
+     * @param c Entier compris entre 1 et 10 indiquant le numéro de colonne
+     * @param d Entier compris entre 1 et 2 indiquant le sens du bateau
+     * @param t Entier compris entre 2 et 5 indiquant la taille du bateau
+     * @return isPosOk booléen indiquant si la position du bateau est valide ou non
+     */
     public static boolean posOk(int [][]grille, int l, int c, int d, int t){
         boolean isPosOk = true;
 
@@ -259,6 +354,15 @@ public class Grille_de_jeu extends Parent {
         return isPosOk;
     }
 
+    /**
+     *Fonction qui place les bateaux sur la grille, en modifiant les 0 par les numéros des bateaux.
+     * @param grille Grille sur laquelle on doit placer le bateau
+     * @param l Entier compris entre 1 et 10 indiquant le numéro de ligne
+     * @param c Entier compris entre 1 et 10 indiquant le numéro de colonne
+     * @param d Entier compris entre 1 et 2 indiquant le sens du bateau
+     * @param t Taille
+     * @param typeDeBateau Numéro correspondant au type du bateau à placer
+     */
     public static void initBateaux(int grille[][], int l, int c, int d, int t, int typeDeBateau){
         /*
          * On teste si le bateau est horizontale
@@ -284,6 +388,10 @@ public class Grille_de_jeu extends Parent {
         }
     }
 
+    /**
+     * Methode de débogage utilisé pour afficher en console les grilles de jeu
+     * @param grille La grille à afficher
+     */
     public static void AfficherGrilleEnConsole(int grille[][]){
 
         /*
@@ -332,18 +440,27 @@ public class Grille_de_jeu extends Parent {
         }
     }
 
+    /**
+     * Méthode utilisée pour permettre au joueur d'effectuer un tir sur la grille de l'ordinateur
+     * @param l Integer représentant le numéro de la ligne où tirer
+     * @param c Integer représentant le numéro de la colonne où tirer
+     */
     public void tirJoueur(int l, int c){
+        //On vérifie si la partie n'a pas encore été gagnée
         if(vainqueur(grilleOrdi) == false && vainqueur(grilleJeu) == false) {
+            //On vérifie si le tir a touché un bateau de l'ordinateur
             if (grilleOrdi[l][c] != 0 && grilleOrdi[l][c] != 6) {
                 System.out.println("Tu as touché l'ennemi !");
-                Cell cell = getCell(c, l);
+                Cell cell = recupererCell(c, l);
                 cell.setFill(Color.RED);
                 grilleOrdi[l][c] = 6;
-            } else {
+            }
+            //Sinon le tir est dans l'eau
+            else {
                 if (grilleOrdi[l][c] == 0) {
                     System.out.println("Tu as tiré dans l'eau !");
 
-                    Cell cell = getCell(c, l);
+                    Cell cell = recupererCell(c, l);
                     cell.setFill(Color.BLUE);
                 }
             }
@@ -353,8 +470,13 @@ public class Grille_de_jeu extends Parent {
         vainqueur(grilleOrdi);
     }
 
+    /**
+     * Méthode utilisée pour permettre à l'ordinateur d'effectuer un tir sur la grille du joueur
+     */
     public void tirOrdi(){
+        //On vérifie si la partie n'a pas encore été gagnée
         if(vainqueur(grilleJeu) == false && vainqueur(grilleOrdi) == false) {
+            //On définit 2 Integer pour les coordonnées du tir puis on leur assigne une valeur aléatoire jusqu'à en trouver une sur laquelle aucun tir n'a encore été effectué
             int l;
             int c;
 
@@ -364,15 +486,18 @@ public class Grille_de_jeu extends Parent {
             }
             while (grilleJeu[l][c] == 6 || grilleJeu[l][c] == 7);//Re tirer tant que la case a déjà été tiré, pour être sûr que l'IA touche une case différente à chaque tir
 
+            //On vérifie si le tir a touché un bateau du joueur
             if (grilleJeu[l][c] != 0 && grilleJeu[l][c] != 6 && grilleJeu[l][c] != 7) {
                 System.out.println("L'ennemi t'as touché !");
-                Cell cell = getCell(c, l);
+                Cell cell = recupererCell(c, l);
                 cell.setFill(Color.RED);
                 grilleJeu[l][c] = 6;
-            } else {
+            }
+            //Sinon le tir est dans l'eau
+            else {
                 if (grilleJeu[l][c] == 0) {
                     System.out.println("L'ennemi a tiré dans l'eau !");
-                    Cell cell = getCell(c, l);
+                    Cell cell = recupererCell(c, l);
                     cell.setFill(Color.BLUE);
                     grilleJeu[l][c] = 7;
                 }
@@ -380,6 +505,11 @@ public class Grille_de_jeu extends Parent {
         }
     }
 
+    /**
+     * Vérifier si une grille est gagnante
+     * @param grille Grille à vérifier
+     * @return Une variable booléenne qui indique si la partie a été gagnée
+     */
     public boolean vainqueur(int grille[][]){
         boolean isVainqueur = true;
         int quiEstLeVainqueur = 0;

@@ -9,13 +9,24 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/**
+ * Class qui crée la fenêtre de fin de partie
+ */
 public class Fenetre_de_fin_de_partie extends Parent {
     public static Stage mainWindow;
 
+    /**
+     * Constructeur qui appelle la méthode CreerFenetre()
+     * @param vainqueur Integer indiquant qui est le vainqueur de la partie (0 = Ordinateur, 1 = Joueur)
+     */
     public Fenetre_de_fin_de_partie(int vainqueur) {
         this.CreerFenetre(vainqueur);
     }
 
+    /**
+     * Méthode utilisée pour créer la fenêtre de fin de partie
+     * @param vainqueur Integer indiquant qui est le vainqueur de la partie (0 = Ordinateur, 1 = Joueur)
+     */
     public void CreerFenetre(int vainqueur){
         Pane root = new Pane();
         mainWindow = new Stage();
@@ -23,6 +34,7 @@ public class Fenetre_de_fin_de_partie extends Parent {
         mainWindow.setScene(new Scene(root, 200, 200));
         mainWindow.setResizable(false);
 
+        //Si le vainqueur est l'ordinateur
         if(vainqueur == 0){
             Text text = new Text("Vous avez perdu :(");
             text.setLayoutX(50);
@@ -30,6 +42,7 @@ public class Fenetre_de_fin_de_partie extends Parent {
             root.getChildren().add(text);
         }
 
+        //Si le vainqueur est le joueur
         if(vainqueur == 1){
             Text text = new Text("Vous avez gagné :)");
             text.setLayoutX(50);
@@ -37,6 +50,7 @@ public class Fenetre_de_fin_de_partie extends Parent {
             root.getChildren().add(text);
         }
 
+        //Bouton rejouer
         Button rejouer = new Button("Rejouer");
         rejouer.setLayoutX(70);
         rejouer.setLayoutY(100);
@@ -62,6 +76,7 @@ public class Fenetre_de_fin_de_partie extends Parent {
             }
         });
 
+        //Bouton quitter
         Button quitter = new Button("Quitter");
         quitter.setLayoutX(70);
         quitter.setLayoutY(150);
