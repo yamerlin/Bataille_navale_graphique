@@ -2,6 +2,9 @@ package com.example.bataille_navale_graphique;
 
 import javafx.scene.Parent;
 
+/**
+ * Class qui crée les bateaux placés sur les grilles
+ */
 public class Bateaux extends Parent {
 
     //Variable utilisée pour assigner son sens à un bateau

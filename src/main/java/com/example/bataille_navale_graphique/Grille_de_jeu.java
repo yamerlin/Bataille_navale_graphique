@@ -25,6 +25,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
+/**
+ * Class qui crée les grilles de jeux, composées de 10 x 10 cellules, où placer les bateaux et effectuer les tirs
+ */
 public class Grille_de_jeu extends Parent {
     /**
      * Variable booléenne indiquant si le jeu a commencé ou non

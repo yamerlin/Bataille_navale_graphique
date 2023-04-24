@@ -30,6 +30,9 @@ import java.util.Random;
 
 import com.example.bataille_navale_graphique.Grille_de_jeu.Cell;
 
+/**
+ * Class qui crée la fenêtre de jeu comprenant les deux grilles de jeu
+ */
 public class Fenetre_de_jeu extends Parent {
 
     /**
